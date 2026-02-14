@@ -1,16 +1,16 @@
 import { LayoutDashboard, Target, Calendar, BarChart3, Settings } from "lucide-react";
-import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: Target, label: "My Goals", active: false },
-  { icon: Calendar, label: "Schedule", active: false },
-  { icon: BarChart3, label: "Statistics", active: false },
-  { icon: Settings, label: "Settings", active: false },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: Target, label: "My Goals", path: "/goals" },
+  { icon: Calendar, label: "Schedule", path: "/schedule" },
+  { icon: BarChart3, label: "Statistics", path: "/statistics" },
+  { icon: Settings, label: "Settings", path: "/settings" },
 ];
 
 const DashboardSidebar = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const location = useLocation();
 
   return (
     <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-sidebar border-r border-border p-6">
@@ -41,20 +41,23 @@ const DashboardSidebar = () => {
 
       {/* Navigation */}
       <nav className="flex flex-col gap-2 flex-1">
-        {navItems.map((item, i) => (
-          <button
-            key={item.label}
-            onClick={() => setActiveIndex(i)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-              activeIndex === i
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-            }`}
-          >
-            <item.icon size={20} />
-            <span>{item.label}</span>
-          </button>
-        ))}
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Link
+              key={item.label}
+              to={item.path}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+              }`}
+            >
+              <item.icon size={20} />
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Footer */}
